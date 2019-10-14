@@ -1,0 +1,8 @@
+select course_name,course_credit
+from course
+where second.course_pro_id in
+(select second.course_pro_id
+from course first,course second
+where first.course_pro_id = second.course_id
+
+)and first.course_name='数据处理'
