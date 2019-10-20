@@ -1,35 +1,35 @@
 create database s1831050017
 go
 use s1831050017
-
+go
 create table employee
 (
-          employeeid char(6) primary key
+          employeeid char(6) primary key,
 		  name char(10) not null,
-		  birthday datetime(8) ,
-		  sex bit(1),
+		  birthday datetime not null ,
+		  sex bit  not null,
 		  address char(20),
 		  zip char(6),
-		  phonenumber char(6),
+		  phonenumber char(12),
 		  emailadress char(30),
-		  departmentid char(3) unique,
+		  departmentid char(3) not null references departments
 )
 
 create table departments
 (
 		
-		 departmentid char(3) primary key,
-		 departmentname char(20) not null,
-		 note text(16),
+		 deptid char(3) primary key,
+		 deptname char(20) not null,
+		 note text
 
 )
 
 create table salary
 (
 		
-		employeeid char(6) primary key,
-		income float(8),
-		outcome float(8),
+		employeeid char(6)  not null references employee,
+		income float(8) not null,
+		outcome float(8) not null,
 )
 
 /*录入数据*/
@@ -37,7 +37,7 @@ insert into departments
 values 
 		('1','财务部','财务部'),
 		('2','研发部','研发部'),
-		('3','人力资源部','人力资源部'),
+		('3','人力资源部','人力资源部');
 
 insert into employee
 values 
@@ -51,7 +51,7 @@ values
 		('2004','王军','79-5-12','0','山东','475008','5687957','wj@henu.edu.cn','2'),
 		('3001','徐静','76-8-12','1','河南','475009','0378366','xj@henu.edu.cn','3'),
 		('3002','赵军','79-2-19','0','河南','475010','0378377','zj@henu.edu.cn','3'),
-		('3003','王霞','82-8-18','1','河南','475011','0378388','wx@henu.edu.cn','3'),
+		('3003','王霞','82-8-18','1','河南','475011','0378388','wx@henu.edu.cn','3');
 
 insert into salary
 values
@@ -65,4 +65,4 @@ values
 		('2004','5100','1800'),
 		('3001','4200','2000'),
 		('3002','4100','1800'),
-		('3003','4600','1400'),
+		('3003','4600','1400');
