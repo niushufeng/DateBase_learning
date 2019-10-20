@@ -2,6 +2,16 @@ create database s1831050017
 go
 use s1831050017
 go
+
+create table departments
+(
+		
+		 deptid char(3) primary key,
+		 deptname char(20) not null,
+		 note text
+
+)
+
 create table employee
 (
           employeeid char(6) primary key,
@@ -15,14 +25,7 @@ create table employee
 		  departmentid char(3) not null references departments
 )
 
-create table departments
-(
-		
-		 deptid char(3) primary key,
-		 deptname char(20) not null,
-		 note text
 
-)
 
 create table salary
 (
