@@ -1,0 +1,105 @@
+a) 查询每个雇员的所有信息
+	select *
+	from employee
+b) 查询每个雇员的地址和电话
+	select address,phonenumber
+	from employee
+c) 查询EmployeeID为2001的雇员的地址和电话。
+	select address,phonenumber
+	from employee
+	where employeeid='2001'
+d) 查询女雇员地址和电话，并用AS子句将结果中各列的标题分别指定为“地址”和“电话”。
+	select address 地址,phonenumber 电话
+	from employee
+	where sex='1'
+e) 计算每个雇员的实际收入。
+	select income,outcome,income-outcome 实际收入
+	from salary
+f) 找出所有姓王的雇员的部门号。
+	select name, departmentid
+	from employee
+	where name like '王%'
+（g）：找出所有地址中含有“河南”的雇员的号码和部门号。
+	select phonenumber, departmentid
+	from employee
+	where address= '河南'
+a)	查询每个雇员的情况及工资情况（工资=Income - Outcome）
+    select employee.*,salary.income-salary.outcome 工资
+    from employee,salary
+    where employee.employeeid=salary.employeeid
+b)	查询财务部工资在2200元以上的雇员姓名及工资情况
+    select employee.name,salary.income-salary.outcome
+    from employee,salary
+    where employee.employeeid=salary.employeeid
+    and (salary.income-salary.outcome)>=2200
+
+c)	查询研发部在1980年以前出生的雇员姓名及其工资详情
+	select employee.name,salary.income-salary.outcome 工资
+	from employee,departments,salary
+	where employee.departmentid=departments.deptid 
+	and employee.employeeid=salary.employeeid
+	and employee.birthday>=80-01-01 and departments.deptname='研发部'
+d)	查询人力资源部雇员的最高和最低工资
+	select max(salary.income-salary.outcome)
+	from departments,salary,employee
+	where employee.departmentid=departments.deptid 
+	and employee.employeeid=salary.employeeid 
+	and departments.deptname='人力资源'
+
+e)	将各雇员的情况按工资由低到高排列
+	select employeeid,income-outcome
+	from salary
+	order by income-outcome asc
+
+f)	求各部门的雇员数
+	 select departments.deptid,count(employee.employeeid) 雇员人数
+	 from departments,employee
+	 group by departments.deptid
+
+g)	找出所有在财务部和人力资源部工作的雇员的编号
+	select employee.employeeid
+	from employee,departments
+	where departments.deptname='财务部' or departments.deptname='人力资源部'
+	and employee.departmentid=departments.deptid
+h)	统计人力资源部工资在2500以上雇员的人数
+	select departments.deptname, salary.income-salary.outcome
+	from departments,salary,employee
+	where departments.deptname='人力资源部' and (salary.income-salary.outcome)>=2500
+	and employee.departmentid=departments.deptid and employee.employeeid=salary.employeeid
+
+i)	求财务部雇员的总人数
+	 select departments.deptname,count(employee.employeeid) 雇员人数
+	 from departments,employee
+	 group by departments.deptname
+	 having departments.deptname='财务部'
+j)	求财务部雇员的平均工资
+	 select departments.deptname,avg(salary.income-salary.outcome) 平均工资
+	 from departments,employee,salary
+	 group by departments.deptname
+	 having departments.deptname='财务部'
+k)	查找比所有财务部的雇员工资都高的雇员的姓名
+	select distinct employee.name
+    from employee,departments,salary
+    where (salary.income-salary.outcome)>all(
+			select salary.income-salary.outcome
+			from departments,salary,employee
+			where departments.deptid=employee.departmentid
+			and employee.employeeid=salary.employeeid
+			and departments.deptname='财务部'
+			)
+
+l)	查找财务部年龄不低于研发部所有雇员年龄的雇员的姓名
+	 select distinct employee.name
+     from employee,departments
+     where employee.birthday>=all(
+				select employee.birthday
+				  from employee,departments
+				     where departments.deptid=employee.departmentid 
+				     and departments.deptname='研发部') 
+     and departments.deptname='财务部' 
+     and departments.deptid=employee.departmentid
+
+m)	查找在财务部工作的雇员的情况
+     select *
+    from employee,salary
+    where employee.employeeid=salary.employeeid
