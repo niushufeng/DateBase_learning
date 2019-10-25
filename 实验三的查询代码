@@ -1,0 +1,53 @@
+--1．在S表中插入元组“s6，华誉，40，广州”
+--insert into s values ('s6','华誉','40','广州');
+--2．在J表中插入元组“j8，传感器厂”
+--insert into j values('j8','传感器厂','null')
+--3．对每一个供应商，求他为各种工程供应零件的总数量，并将此结果存入数据库
+--select distinct sno, sum(qty) 总数量
+--from spj
+--group by sno
+
+--4．将P表中PNO值为p6的元组的color属性值改为绿，weight属性值改为60
+--update p
+--set color='绿',weight='60'
+--where pno='p6'
+--5．将SPJ表中前4个元组的qty属性值统一修改为300
+--update spj
+--set qty='300'
+--where sno='s1'
+--6．将S表中city属性名含有“京”或“津”的相应status属性值增加100
+--update s
+--set status=status+100
+--where city like'%京%'or city like'%津%'
+--7．将供应商s2为“一汽”工程项目所供应的零件数量修改为2000
+--update spj
+--set qty='2000'
+--where sno='s2' and jno=(select jno from j where jname='一汽'     )
+--8．将全部红色零件的颜色修改为浅红色
+--update p
+--set color='浅红'
+--where pno in (select pno from p where color='红'  )
+--9．由s5供给j4的零件p6改为由s3供应
+--update spj
+--set sno='s3'
+--where pno='p6' and jno='j4'and sno='s5'
+--10．在SPJ表中新增一名为SDATE的属性列，对该表中的每一元组在SDATE属性列上填上实验当时的日期和时间
+--alter table spj add s_date date
+--11．删除所在城市为“广州”的供应商记录
+--delete 
+--from s
+--where city='广州'
+---12．删除所有零件名称中第一个字为“螺”字的零件记录，并在供应情况表中删除相应的记录
+--delete 
+--from spj,p
+--where p.pno in
+--(select p.pno
+--from p,spj
+--where p.pname like'螺%'  p.pno=spj.pno) 
+
+--13．删除s3和s4两供应商为“三建”工程供应“螺母”或“螺丝刀”零件的相应供应情况数据信息
+--delete 
+--from spj
+--where (sno='s3'or sno='s4') 
+--and jno=(select jno from j where jname='三建') 
+--and pno in (select pno from p where pname ='螺母' or pname='螺丝刀') 
