@@ -39,11 +39,14 @@
 --where city='广州'
 ---12．删除所有零件名称中第一个字为“螺”字的零件记录，并在供应情况表中删除相应的记录
 --delete 
---from spj,p
---where p.pno in
+--from spj
+--where pno in
 --(select p.pno
 --from p,spj
---where p.pname like'螺%'  p.pno=spj.pno) 
+--where p.pname like'螺%' and p.pno=spj.pno) 
+--delete
+--from p
+--where pname like'螺%'
 
 --13．删除s3和s4两供应商为“三建”工程供应“螺母”或“螺丝刀”零件的相应供应情况数据信息
 --delete 
