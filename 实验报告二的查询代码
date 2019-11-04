@@ -103,3 +103,4 @@ m)	查找在财务部工作的雇员的情况
      select *
     from employee,salary
     where employee.employeeid=salary.employeeid
+
