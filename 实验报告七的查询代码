@@ -1,0 +1,27 @@
+--create login user1 with password='123456'
+--create user u1 from login user1
+--create login user2 with password='123456'
+--create user u2 from login user2
+--create login user3 with password='123456'
+--create user u3 from login user3
+--create login user4 with password='123456'
+--create user u4 from login user4
+--create login user5 with password='123456'
+--create user u5 from login user5
+--create login user6 with password='123456'
+--create user u6 from login user6
+--create login user7 with password='123456'
+--create user u7 from login user7
+--1．	创建角色ProgramerRole，拥有创建表，存储过程，
+--视图权限，拥有对Salary表的查询、修改、插入权限
+--create role ProgramerRole
+--grant select,update,insert
+--on salary
+--to ProgramerRole
+--2．	创建一个登录账号Testlogin
+--create login Testlogin with password='123456'
+--create user u7 from login user7
+--3．	创建对应于这个登录账号的数据库用户TestUser
+--create user TestUser from login Testlogin
+--4．	将用户TestUser添加到TestRole角色中
+--exec sp_addrolemember 'ProgramerRole','TestUser'
