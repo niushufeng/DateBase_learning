@@ -25,3 +25,4 @@
 --create user TestUser from login Testlogin
 --4．	将用户TestUser添加到TestRole角色中
 --exec sp_addrolemember 'ProgramerRole','TestUser'
+
