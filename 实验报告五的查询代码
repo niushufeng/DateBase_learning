@@ -1,0 +1,83 @@
+--1.对应HRM数据库，参照前面实验中完成的查询，按如下要求自行设计视图：
+--1）基于单个表按投影操作定义视图。
+--举例：定义一个视图用以查看所有员工的编号、姓名和出生日期。
+--create view _1_employee
+--as
+--select employeeid,name,birthday
+--from employee
+--2）基于单个表按选择操作定义视图。
+--举例：定义一个满足sex=’true’的员工的所有信息的视图。
+--create view _2_employee
+--as
+--select *
+--from employee
+--where sex='true'
+--with check option
+--3）基于单个表按选择和投影操作定义视图。
+--举例：定义一个视图用以查看部门号码为‘2’的所有员工的姓名、电话和邮件地址。
+--create view _3_employee
+--as
+--select name,phonenumber,emailadress
+--from employee
+--where departmentid='2'
+--4）基于多个表根据连接操作定义视图。
+--举例：定义一个视图用以查看所有员工的姓名、部门名及工资。
+--create view _4_employee(name,departmentname,salary)
+--as
+--select employee.name,departments.deptname,salary.income-salary.outcome
+--from departments,employee,salary
+--where departments.deptid=employee.departmentid 
+--and employee.employeeid=salary.employeeid
+--5）基于多个表根据嵌套查询定义视图。
+--举例：定义一个比所有财务部的雇员工资都高的雇员的信息的视图
+--create view _5_employee
+--as
+--select *
+--from _4_employee
+--where salary> any
+--(select salary
+--from _4_employee
+--where departmentname='财务部')
+--and  departmentname!='财务部'
+--6）定义含有虚字段（即基本表中原本不存在的字段）的视图。
+--举例：定义一个视图用以查看所有雇员的编号、姓名、年龄。
+--create view _6_employee(employeeid,name,age)
+--as
+--select employeeid,name,2019-birthday
+--from employee
+--2．	分别在定义的视图上进行查询、插入、更新和删除操作，
+--分情况（查询、更新）讨论哪些操作可以成功完成，哪些不能成功完成，并分析原因。
+--（1）	若视图是由2个基本表导出的，则此视图不允许更新
+--举例：将_4_employee表中的员工李勇姓名改为李小勇
+--update _4_employee
+--set name='李小勇'
+--where name='李勇'
+--（2）	若视图的字段来自字段表达式或者常数，则不允许对此视图执行insert 和update操作，
+--但允许执行delete操作。
+
+--（3）	若视图的字段来自聚集函数，则此视图不允许更新
+--create view s_g(sno,gavg)
+--as
+--select sno,avg(grade)
+--from sc
+--group by sno
+--举例：把学号‘201215121’的学生的平均成绩改成90分
+--update s_g
+--set gavg=90
+--where sno='201215121'
+--（4）	若此视图定义中含有group by字句，则此视图不允许更新
+--举例：把学号‘201215121’的学生的平均成绩改成90分
+--update s_g
+--set gavg=90
+--where sno='201215121'
+--（5）	若视图中含有distinct短语，则此视图不允许更新
+--举例：查询选课的总人数
+--create view s_sum(sumnumber)
+--as 
+--select count(distinct sno)
+--from sc
+--举例：对总人数进行更新
+--update s_sum
+--set sumnumber=4
+--（6）	若视图定义中有嵌套查询，
+--并且内层查询的from子句中涉及的表也是导出该视图的基本表，则此视图不允许更新
