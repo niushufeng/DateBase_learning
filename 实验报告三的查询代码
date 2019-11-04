@@ -54,3 +54,4 @@
 --where (sno='s3'or sno='s4') 
 --and jno=(select jno from j where jname='三建') 
 --and pno in (select pno from p where pname ='螺母' or pname='螺丝刀') 
+
