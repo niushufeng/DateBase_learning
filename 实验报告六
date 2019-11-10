@@ -1,0 +1,140 @@
+--1．	建立课程的实体完整性, 和课程号cno的参照完整性;
+/*alter table course
+add constraint 
+primary key(cno)
+foreign key(cno) references sc(cno)*/
+--2．	对HRM数据库，练习建立三个表的
+--主外键约束、唯一约束、取空值约束、用户自定义的约束（参考HRM数据库表定义图中说明）；
+/*create database s1831050017_hrm
+go
+use s1831050017_hrm
+go
+create table departments
+(		
+		 deptid char(3) primary key,
+		 deptname char(20) not null,
+		 note text
+)
+create table employee
+(
+          employeeid char(6) primary key,
+		  name char(10) not null,
+		  birthday datetime not null ,
+		  sex bit  not null,
+		  address char(20),
+		  zip char(6),
+		  phonenumber char(12),
+		  emailadress char(30),
+		  departmentid char(3) not null references departments
+)
+create table salary
+(
+		employeeid char(6)  not null references employee,
+		income float(8) not null,
+		outcome float(8) not null,
+)*/
+--3．	建立salary表的Income字段限定在0-9999之间。
+/*alter table salary 
+add constraint c1 check(income between 0 to 9999)*/
+--5.1创建表
+--5.2定义码
+--5.3添加外码
+--foreign key(sno) references student(sno)
+--删除主键
+--alter table student
+--drop primary key
+--5.4级联删除
+/*create table sc
+(
+sno varchar(9),
+cno varchar(4),
+grade smallint,
+primary key(sno,cno),
+foreign key(sno) references student(sno)
+  on delete cascade
+  on update cascade,
+foreign key(cno) references course(cno)
+  on delete no action
+  on update cascade,
+);*/
+--alter table student
+--add constraint ssex char(20) not null
+--5.5添加允许为空
+--alter table student
+--add constraint c2 ssex char(20) not null
+--删除允许为空
+/*alter table student
+drop constraint c2*/
+--5.7建立check(ssex in('男','女'))
+--alter table student
+--add constraint c3 check(ssex in('男','女'))
+--删除check(ssex in('男','女'))
+--alter table student
+--drop constraint c3
+--5.8grade的值应该在0-100之间
+/*create table sc
+(
+sno varchar(9),
+cno varchar(4),
+grade smallint,check (grade >=0 and grade <=100),
+primary key(sno,cno),
+foreign key(sno) references student(sno),
+foreign key(cno) references course(cno),
+  
+);*/
+--5.9名字不能以Ms打头
+--5.10要求学号在90000-99999之间
+--添加操作
+/*alter table student
+add constraint c4 check(sno between 90000 and 99999)*/
+--删除操作
+/*alter table student
+drop constraint c4 */
+--5.11建立教师登记表，要求应发工资不低于3000元
+/*create table teacher
+(
+	eno number(4) primary key,
+	ename char(10),
+	job char(8)
+	sal numeric(7,2)
+	deduct numeric(7,2)
+	constraint teacherfkry foreign key(deptno)
+	references dept(depton)
+	constraint c1 check(sal+deduct>=300)
+	)*/
+--5.12设置sname为非空
+/*alter table student
+add constraint  sname char(20) not null*/
+--5.13
+create database school
+go
+use school;
+create table student
+(
+	sno varchar(9) primary key,
+	/* 存储学生号码 */
+	sname varchar(20) unique,
+	ssex char(2),
+	sage smallint,
+	sdept varchar(20)
+);
+create table course
+(
+	cno varchar(4) primary key,
+	cname varchar(40) not null,
+	cpno varchar(4),
+	ccredit smallint,
+	foreign key (cpno) references course(cno)
+);
+create table s
+(
+	sno varchar(9),
+	cno varchar(4),
+	grade smallint,
+	primary key (sno, cno),
+	/* 主码有两个属性构成, 必须作为表级完整性进行定义 */
+	foreign key (sno) references student(sno),
+	/* 表级完整性约束条件, stu_id是外码, 被参照表是student */
+	foreign key (cno) references course(cno)
+);
+
