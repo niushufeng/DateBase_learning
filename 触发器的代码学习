@@ -1,0 +1,138 @@
+--触发器
+--当触发器执行时，系统会产生2个临时表，insert和delect表
+--instead of 触发器在sql语句执行前就被执行；after 触发器则是在sql语句执行完才执行
+--例子：当对表sc的grade属性进行修改改，若分数增加了10%则将此次操作记录到下表中：
+--sc_u(sno,cno,oldgrade,newgrade)
+/*create trigger sc_t
+after update of grade on sc
+referencing 
+old row as oldtuple,
+new row as newtuple
+for each row
+when(newtuple.grade>=1.1*oldtuple.grade)
+insert into sc_u(sno,cno,oldgrade,newgrade)
+values(oldtuple.sno,oldtuple.cno,oldtuple.grade,newtuple.grade)*/
+--例子1：
+/*create trigger 学生表修改通知
+on student
+instead of insert
+as
+	print '学生表发生了变化'
+	select * from deleted
+	select * from inserted
+	select * from student
+go
+
+create trigger 学生表修改通知2
+on student
+after insert
+as
+	print '学生表发生了变化'
+	select * from deleted
+	select * from inserted
+	select * from student
+go
+
+Insert student
+            Values('201215016','刘席','男',16,'IS')
+
+select *
+from student
+*/
+--例子2：
+/*Create  trigger 学生表修改通知3
+On student
+For insert,delete,update  
+As 
+Print '学生表发生了变化'
+select * from deleted
+select * from inserted
+select * from student
+go
+
+delete 
+from student
+where sno='201215016'
+
+select *
+from student
+*/
+--例子3：
+/*create trigger welcome_student
+on student
+after insert
+as print'欢迎新同学'
+go
+
+Insert student
+            Values('201215016','刘席','男',16,'IS')
+*/
+--例子4：成绩不能大于100分
+/*create trigger grade_warn
+on sc
+for insert,update,delete
+as
+declare @gg int--声明
+select @gg=grade from inserted 
+if @gg>100
+begin
+print'成绩不能大于100'
+rollback--返回
+end
+exec sp_helptrigger sc
+
+insert sc
+		values('200215121','1','90')
+delete 
+from sc
+where sno='200215121'
+
+select *
+from course
+
+select *
+from sc
+*/
+--例子5：限制删除SC表中成绩不及格学生的修课记录。
+/*CREATE TRIGGER tri_del_grade
+ON SC 
+FOR DELETE
+AS
+IF EXISTS(SELECT * FROM DELETED    
+         WHERE Grade < 60)
+     ROLLBACK
+	 
+delete 
+from sc
+where sno='200215122'
+*/
+
+--[例6]：限制将SC表中不及格学生的成绩改为及格。
+/*create trigger tri_update_grade
+on sc 
+for update
+as 
+  if update(grade)
+  if exists(select * from inserted,deleted
+  where inserted.sno=deleted.sno and inserted.grade>=60 and deleted.grade<60)
+    begin	
+	  print '不能将不及格的成绩改为及格'
+      rollback
+  end
+
+select *
+from sc
+
+update sc
+set grade=100
+where sno='200215122'
+*/
+--例子7：删除tri_grade触发器。
+/*DROP TRIGGER tri_grade 
+*/
+
+--若要查看已经建好的触发器代码。使用存储过程：
+sp_helptext   grade_warn--查看触发器代码
+--若要查看某一特定表上现有的触发器，使用存储过程：
+sp_helptrigger  数据表名
+
