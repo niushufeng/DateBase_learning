@@ -1,0 +1,71 @@
+第六章：关系数据库理论：
+6.1：问题的提出
+6.2：规范化
+6.3：数据依赖的公理系统
+6.1：
+数据冗余尽可能的少，不会发生插入异常，删除异常和更新异常
+6.2：
+范式：数据库的逻辑设计要求
+	第一范式表：表中不能有表，就是不能在列中套列；每个数据域只能有一个值；
+	全码表（3列确定一个主码，主码的定义是一行是唯一的，没有和其他行相同的值）
+6.3：
+1.数据依赖是属性和属性之间的一种约束关系
+是数据内在的性质
+2.主要类型：
+（1）函数依赖：
+	
+	sname=f(sno),sdept=f(sno)
+	例子【6.1教务管理系统：】：
+		U={sno,sdept,mname,cno,grade}
+		根据函数语义推出函数依赖f={sno->sdept;sdept->mname;(sno,cno)->grade}主键是sno+cno
+		1)数据冗余：
+			a.浪费大量存储空间，b.更新异常：要改大量数据的副本，如更改一个系主任名字就要改很多次
+			c.插入异常：插入一个系主任叫李薇，插入异常，要改很多数据
+			d.删除异常：删除好多不想删除的数据
+		所以s(sno,sdept),sc(sno,cno,grade),dept(sdept,mname.sdept)
+	例子【教师系统】：
+		R(tname,addr,c#,cname)
+		解决方法：模式分解:R1(tname,daar),R2(tname,c#),R3(c#,cname)
+函数依赖的概念：
+平凡函数依赖和非平凡函数依赖：一般都是非平凡函数依赖：
+(sno,cno)->grade//非
+(sno,cno)->sno//平凡
+完全函数依赖与部分函数依赖：
+sc(sno,cno,grade)
+(sno,cno)->grade//完全F
+(sno,cno)->sno//部分函数依赖P
+传递函数依赖：
+码：
+	候选码：完全依赖
+	超码：部分依赖，
+	主属性和非主属性：
+	全码：
+	例子【6.2】s(sno,sdept,sage);sno是码，是主属性；其他2个是非主属性
+		sc(sno,cno,grade);(sno,cno)是码
+		R(p,w,a)//p:演奏者，w:作品，a:听众 （全码，都是主属性）
+	外码：
+范式：
+各种范式之间存在联系：逐级包含
+1NF:表中不能有表
+2NF：（第二范式）每一个非主属性都由候选码决定，完全与部分
+	例子：SLC(sno,sdept,sloc,cno,grade),sloc为学生住所，并且每个系的学生住在同一个地方
+		码是（sno,cno）,主属性（sno和cno）,非主属性（其他几个），
+		函数依赖有
+		     (sno.cno)->grade,sno->sdept,(sno,cno)->sdept,sno->sloc,(sno,cno)->sloc,sdept->sloc,不满足2NF
+            存在问题：
+	  数据冗余；更新异常（系的住址改变），插入异常（新成立一个系，还没招生），
+	  删除异常（这个系都毕业了，如果删除，这个系都没了）
+	解决方法：投影分解，sc（sno,cno,grade），sl(sno,sdept,sloc)
+	例子：
+		1.写出函数依赖，找码， 
+			（工程号、材料号）
+			
+3NF:
+	没有传递依赖
+		sc（sno,cno,grade），sd(sno,sdept),      dl(sdept,sloc)属于第三范式
+BCNF:	所有主属性不能对每一个不含有它的码有部分依赖（所有的决定因素都含有码，）
+	例子：C(cno,cname,pcno) 属于3NF,BCNF
+	         S(SNO,SNAME,SDEPT,SAGE),属于BCNF
+	      
+4NF:
+5NF:
